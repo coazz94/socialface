@@ -10,7 +10,10 @@ import path from "path"
 import { fileURLToPath } from "url"
 import authRoutes from "./routes/auth.js"
 import userRoutes from "./routes/users.js"
+import postRoutes from "./routes/post.js"
 import { register } from "./controllers/auth.js"
+import { verifyToken } from "./middleware/auth.js"
+import { createPost } from "./controllers/posts.js"
 
 /* CONFIGURATIONS */
 // because of modules we have to use these configs
@@ -51,11 +54,14 @@ const upload = multer({ storage })
 
 /* ROUTES WITH FILES */
 // register is the controller => logic from the endpoint
+// upload => will take the picture from the http and save it to the setted settings above
 app.post("/auth/register", upload.single("picture"), register)
+app.post("/posts", verifyToken, upload.single("picture"), createPost)
 
 /* ROUTES */
 app.use("/auth", authRoutes)
 app.use("/users", userRoutes)
+app.use("/posts", postRoutes)
 
 /* MONGOOSE SETUP */
 // on the Port that is in the .env file or if it is not working on 6001
