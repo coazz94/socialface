@@ -4,7 +4,7 @@ import {
     getUserFriends,
     addRemoveFriend,
 } from "../controllers/users.js"
-import { verifyToken } from "../middleware/auth"
+import { verifyToken } from "../middleware/auth.js"
 // "CRUD = create read update delete"
 
 const router = express.Router()
