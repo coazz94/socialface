@@ -8,6 +8,8 @@ import helmet from "helmet"
 import morgan from "morgan"
 import path from "path"
 import { fileURLToPath } from "url"
+import authRoutes from "./routes/auth.js"
+import userRoutes from "./routes/users.js"
 import { register } from "./controllers/auth.js"
 
 /* CONFIGURATIONS */
@@ -35,7 +37,7 @@ app.use(cors)
 app.use("/assets", express.static(path.join(__dirname, "public/assets")))
 
 /* FILE STORAGE */
-// any time some save a file it is going to be saved in the declared folder
+// any time someone saves a file it is going to be saved in the declared folder
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, "public/assets")
@@ -51,7 +53,12 @@ const upload = multer({ storage })
 // register is the controller => logic from the endpoint
 app.post("/auth/register", upload.single("picture"), register)
 
+/* ROUTES */
+app.use("/auth", authRoutes)
+app.use("/users", userRoutes)
+
 /* MONGOOSE SETUP */
+// on the Port that is in the .env file or if it is not working on 6001
 const PORT = process.env.PORT || 6001
 mongoose
     .connect(process.env.MONGO_URL, {
