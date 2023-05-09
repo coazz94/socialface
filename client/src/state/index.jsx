@@ -10,6 +10,7 @@ const initialState = {
 
 // reducers are functions that you need to change the info in initialState
 // in redux you cant change the values only replace them, but in reducers you can do so
+// https://redux-toolkit.js.org/api/createSlice
 export const authSlice = createSlice({
     name: "auth",
     initialState,
