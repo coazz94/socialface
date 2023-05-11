@@ -24,7 +24,7 @@ const registerSchema = yup.object().shape({
     password: yup.string().required("required"),
     location: yup.string().required("required"),
     occupation: yup.string().required("required"),
-    picture: yup.string().required("required"),
+    // picture: yup.string().required("required"),
 })
 
 const loginSchema = yup.object().shape({
@@ -40,7 +40,7 @@ const initialValuesRegister = {
     password: "",
     location: "",
     occupation: "",
-    picture: "",
+    // picture: "",
 }
 
 const initialValuesLogin = {
@@ -49,7 +49,7 @@ const initialValuesLogin = {
 }
 
 function Form() {
-    const [pageType, setPageType] = useState("register")
+    const [pageType, setPageType] = useState("login")
     const { palette } = useTheme()
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -62,7 +62,7 @@ function Form() {
     }
 
     const register = async (values, props) => {
-        console.log("register")
+        console.log("register Function")
 
         // this allows us to send form info with image
         const formData = new FormData()
@@ -78,15 +78,17 @@ function Form() {
         console.log("login")
     }
 
-    const handleFormSubmit = async (values, onSubmitProps) => {
+    const handleFormSubmit = (values, onSubmitProps) => {
         console.log("here")
-        if (isLogin) await login(values, onSubmitProps)
-        if (isRegister) await register(values, onSubmitProps)
+        // if (isLogin) await login(values, onSubmitProps)
+        // if (isRegister) await register(values, onSubmitProps)
     }
 
     return (
         <Formik
-            onSubmit={handleFormSubmit}
+            onSubmit={(values) => {
+                console.log(values)
+            }}
             initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
             validationSchema={isLogin ? loginSchema : registerSchema}
         >
@@ -121,15 +123,15 @@ function Form() {
                                     onBlur={handleBlur}
                                     // handle on change
                                     onChange={handleChange}
-                                    // value that will be setted
+                                    // value that will be set
                                     value={values.firstName}
                                     name="firstName"
-                                    // if touched and no firstname then error
+                                    // if touched and no firstName then error
                                     error={
                                         Boolean(touched.firstName) &&
                                         Boolean(errors.firstName)
                                     }
-                                    // if touched and no firstname
+                                    // if touched and no firstName
                                     helperText={
                                         touched.firstName && errors.firstName
                                     }
