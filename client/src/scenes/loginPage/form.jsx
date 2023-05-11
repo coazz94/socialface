@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
     Box,
     Button,
@@ -38,8 +38,8 @@ const initialValuesRegister = {
     lastName: "",
     email: "",
     password: "",
-    location: "",
     occupation: "",
+    location: "",
     // picture: "",
 }
 
@@ -50,11 +50,17 @@ const initialValuesLogin = {
 
 function Form() {
     const [pageType, setPageType] = useState("login")
+    const isLogin = pageType === "login"
+    const [validationSchema, setValidationSchema] = useState(
+        isLogin ? loginSchema : registerSchema
+    )
+    const [initialValues, setInitialValues] = useState(
+        isLogin ? initialValuesLogin : initialValuesRegister
+    )
     const { palette } = useTheme()
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const isNonMobile = useMediaQuery("(min-width:600px)")
-    const isLogin = pageType === "login"
     const isRegister = pageType === "register"
 
     const LogoutState = () => {
@@ -89,8 +95,9 @@ function Form() {
             onSubmit={(values) => {
                 console.log(values)
             }}
-            initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
-            validationSchema={isLogin ? loginSchema : registerSchema}
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            enableReinitialize
         >
             {({
                 values,
