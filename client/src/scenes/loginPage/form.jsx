@@ -24,7 +24,7 @@ const registerSchema = yup.object().shape({
     password: yup.string().required("required"),
     location: yup.string().required("required"),
     occupation: yup.string().required("required"),
-    // picture: yup.string().required("required"),
+    picture: yup.string().required("required"),
 })
 
 const loginSchema = yup.object().shape({
@@ -40,7 +40,7 @@ const initialValuesRegister = {
     password: "",
     occupation: "",
     location: "",
-    // picture: "",
+    picture: "",
 }
 
 const initialValuesLogin = {
@@ -50,17 +50,11 @@ const initialValuesLogin = {
 
 function Form() {
     const [pageType, setPageType] = useState("login")
-    const isLogin = pageType === "login"
-    const [validationSchema, setValidationSchema] = useState(
-        isLogin ? loginSchema : registerSchema
-    )
-    const [initialValues, setInitialValues] = useState(
-        isLogin ? initialValuesLogin : initialValuesRegister
-    )
     const { palette } = useTheme()
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const isNonMobile = useMediaQuery("(min-width:600px)")
+    const isLogin = pageType === "login"
     const isRegister = pageType === "register"
 
     const LogoutState = () => {
@@ -78,25 +72,35 @@ function Form() {
         }
 
         formData.append("picturePath", values.picture.name)
+
+        const savedUserResponse = await fetch(
+            "http://localhost:3001/auth/register",
+            { method: "POST", body: formData }
+        )
+
+        const savedUser = await savedUserResponse.json()
+
+        console.log("hsahashhsa", savedUser)
+
+        // for (const [key, value] of formData) {
+        //     console.log(`${key}: ${value}\n`)
+        // }
     }
 
     const login = async (values, props) => {
         console.log("login")
     }
 
-    const handleFormSubmit = (values, onSubmitProps) => {
-        console.log("here")
+    const handleFormSubmit = async (values, onSubmitProps) => {
         // if (isLogin) await login(values, onSubmitProps)
-        // if (isRegister) await register(values, onSubmitProps)
+        if (isRegister) await register(values, onSubmitProps)
     }
 
     return (
         <Formik
-            onSubmit={(values) => {
-                console.log(values)
-            }}
-            initialValues={initialValues}
-            validationSchema={validationSchema}
+            onSubmit={handleFormSubmit}
+            initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
+            validationSchema={isLogin ? loginSchema : registerSchema}
             enableReinitialize
         >
             {({
@@ -195,7 +199,7 @@ function Form() {
                                     borderRadius="5px"
                                     p="1rem"
                                 >
-                                    {/* <Dropzone
+                                    <Dropzone
                                         acceptedFiles=".jpg,.jpeg,.png"
                                         multiple={false}
                                         onDrop={(acceptedFiles) =>
@@ -232,7 +236,7 @@ function Form() {
                                                 )}
                                             </Box>
                                         )}
-                                    </Dropzone> */}
+                                    </Dropzone>
                                 </Box>
                             </>
                         )}
