@@ -80,7 +80,7 @@ function Form() {
 
         const savedUser = await savedUserResponse.json()
 
-        console.log("hsahashhsa", savedUser)
+        console.log("worked", savedUser)
 
         // for (const [key, value] of formData) {
         //     console.log(`${key}: ${value}\n`)
@@ -89,10 +89,11 @@ function Form() {
 
     const login = async (values, props) => {
         console.log("login")
+        console.log(values)
     }
 
     const handleFormSubmit = async (values, onSubmitProps) => {
-        // if (isLogin) await login(values, onSubmitProps)
+        if (isLogin) await login(values, onSubmitProps)
         if (isRegister) await register(values, onSubmitProps)
     }
 
