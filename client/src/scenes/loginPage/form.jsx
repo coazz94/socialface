@@ -61,9 +61,7 @@ function Form() {
         console.log(pageType)
     }
 
-    const register = async (values, props) => {
-        console.log("register Function")
-
+    const register = async (values, onSubmitProps) => {
         // this allows us to send form info with image
         const formData = new FormData()
 
@@ -77,19 +75,40 @@ function Form() {
             "http://localhost:3001/auth/register",
             { method: "POST", body: formData }
         )
-
+        // Get the response
         const savedUser = await savedUserResponse.json()
+        // Formik function to reset the Form
+        onSubmitProps.resetForm()
 
-        console.log("worked", savedUser)
-
-        // for (const [key, value] of formData) {
-        //     console.log(`${key}: ${value}\n`)
-        // }
+        if (savedUser) setPageType("login")
     }
 
-    const login = async (values, props) => {
-        console.log("login")
-        console.log(values)
+    const login = async (values, onSubmitProps) => {
+        const loggedInResponse = await fetch(
+            "http://localhost:3001/auth/login",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(values),
+            }
+        )
+
+        const loggedIn = await loggedInResponse.json()
+        console.log(loggedIn)
+
+        onSubmitProps.resetForm()
+
+        //Post it tho the redux file system, and save it there, to paste it as a action.payload we have to send a object
+        if (loggedIn) {
+            dispatch(
+                setLogin({
+                    user: loggedIn.user,
+                    token: loggedIn.token,
+                })
+            )
+        }
+
+        navigate("/home")
     }
 
     const handleFormSubmit = async (values, onSubmitProps) => {
