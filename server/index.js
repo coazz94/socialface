@@ -32,13 +32,12 @@ app.use(express.json())
 app.use(helmet())
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }))
 
-app.use(morgan("common"))
+app.use(morgan("tiny"))
 
 app.use(bodyParser.json({ limit: "30mb", extended: true }))
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }))
 
-app.use(cors)
-
+app.use(cors())
 // set the directory where we save the files
 app.use("/assets", express.static(path.join(__dirname, "public/assets")))
 
@@ -59,6 +58,7 @@ const upload = multer({ storage })
 // register is the controller => logic from the endpoint
 // upload => will take the picture from the http and save it to the setted settings above
 app.post("/auth/register", upload.single("picture"), register)
+
 app.post("/posts", verifyToken, upload.single("picture"), createPost)
 
 /* ROUTES */
@@ -66,8 +66,8 @@ app.use("/auth", authRoutes)
 app.use("/users", userRoutes)
 app.use("/posts", postRoutes)
 
-/* MONGOOSE SETUP */
-// on the Port that is in the .env file or if it is not working on 6001
+// /* MONGOOSE SETUP */
+// // on the Port that is in the .env file or if it is not working on 6001
 const PORT = process.env.PORT || 6001
 mongoose
     .connect(process.env.MONGO_URL, {
