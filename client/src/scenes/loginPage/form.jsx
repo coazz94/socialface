@@ -93,22 +93,19 @@ function Form() {
             }
         )
 
-        const loggedIn = await loggedInResponse.json()
-        console.log(loggedIn)
+        if (loggedInResponse.ok) {
+            const loggedIn = await loggedInResponse.json()
+            onSubmitProps.resetForm()
 
-        onSubmitProps.resetForm()
-
-        //Post it tho the redux file system, and save it there, to paste it as a action.payload we have to send a object
-        if (loggedIn) {
             dispatch(
                 setLogin({
                     user: loggedIn.user,
                     token: loggedIn.token,
                 })
             )
-        }
 
-        navigate("/home")
+            navigate("/home")
+        }
     }
 
     const handleFormSubmit = async (values, onSubmitProps) => {
@@ -304,9 +301,6 @@ function Form() {
                             }}
                         >
                             {isLogin ? "LOGIN" : "REGISTER"}
-                        </Button>
-                        <Button fullWidth target="" onClick={LogoutState}>
-                            TEST STATE
                         </Button>
                         {/* set the text shown in the corner down depending on which site we are
                             Change even the onClick function according to the page
